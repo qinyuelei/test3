@@ -1,0 +1,41 @@
+<project basedir="." default="runtest" name="automation test">
+    <property name="base.dir" value="."/>
+    <property name="testng.output.dir" value="${base.dir}/test-output"/>
+    <property name="3rd.lib.dir" value="${base.dir}/lib"/>
+    <property name="testng.file" value="ng.xml"/>
+ 
+    <taskdef resource="testngtasks" classpath="${3rd.lib.dir}/testng-6.9.4.jar"/>
+ 
+    <target name="clean">
+        <delete dir="${base.dir}/bin"/>
+    </target>
+    <target name="compile" depends="clean">
+        <mkdir dir="${base.dir}/bin"/>
+        <javac srcdir="${base.dir}/src" destdir="${base.dir}/bin" classpathref="classes" includeantruntime="off">
+            <compilerarg line="-encoding UTF-8 " />
+		</javac>
+    </target>
+ 
+    <path id="classes">
+        <fileset dir="${3rd.lib.dir}" includes="*jar"/>
+        <fileset dir="${3rd.lib.dir}" includes="*zip"/>
+        <pathelement location="${base.dir}/bin"/>
+    </path>
+ 
+    <target name="runtest" depends="compile">
+        <testng outputdir="${testng.output.dir}" classpathref="classes" delegateCommandSystemProperties="true">
+            <xmlfileset dir="${base.dir}" includes="${testng.file}"/>
+            <jvmarg value="-Dfile.encoding=UTF-8" />
+        </testng>
+    </target>
+    
+    <target name="testoutput" depends="runtest">
+        <xslt in= "test-output/testng-results.xml" style= "test-output/testng-results.xsl" out= "D:\workspace\result\index.html " >
+			<param name= "testNgXslt.outputDir" expression="D:\workspace\result" />
+ 			<param name="testNgXslt.showRuntimeTotals" expression="true"/>
+  			<param name="testNgXslt.sortTestCaseLinks" expression="true" />
+ 			<param name="testNgXslt.testDetailsFilter" expression="FAIL,SKIP,PASS,CONF,BY_CLASS" />
+			<classpath refid= "classes" />
+		</xslt>
+	</target>
+</project>

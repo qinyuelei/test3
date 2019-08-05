@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Automation2.0" verbose="1">
+	<test name="MCS">
+		<packages>			
+			<package name="TankLearn2.Learn" />
+			
+		</packages>
+	</test>
+</suite>
